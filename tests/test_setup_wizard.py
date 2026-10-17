@@ -48,6 +48,7 @@ def test_wizard_writes_config(tmp_path):
     command = click.command()(lambda: run_setup_wizard(str(path)))
     answers = "\n".join(
         [
+            "n",  # not an Amazon site, rejected
             "",  # default site
             "not-a-link",  # rejected
             "https://www.amazon.com/dp/B08HR7SV3M",

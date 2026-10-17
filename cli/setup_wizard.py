@@ -105,9 +105,13 @@ def run_setup_wizard(config_path=AUTOBUY_CONFIG_PATH):
     click.echo()
     click.secho("=== FairGame setup ===", bold=True)
     click.echo("Answer a few questions to choose what FairGame watches for.")
-    website = normalize_website(
-        click.prompt("Which Amazon site do you shop on?", default="www.amazon.com")
-    )
+    while True:
+        website = normalize_website(
+            click.prompt("Which Amazon site do you shop on?", default="www.amazon.com")
+        )
+        if website.startswith("www.amazon."):
+            break
+        click.secho("That should look like amazon.com or amazon.co.uk", fg="red")
 
     groups = [prompt_group(1)]
     while click.confirm("\nAdd another, separate item to buy?", default=False):

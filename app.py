@@ -102,7 +102,12 @@ def launch_interactive():
 if __name__ == "__main__":
     try:
         if FROZEN and len(sys.argv) == 1:
-            launch_interactive()
+            import click
+
+            try:
+                launch_interactive()
+            except (EOFError, KeyboardInterrupt, click.exceptions.Abort):
+                print("\nCancelled.")
         else:
             cli.main()
     except ModuleNotFoundError as e:

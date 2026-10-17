@@ -16,13 +16,12 @@ pycryptodome = "*"
 questionary = "*"
 playsound = "==1.2.2"
 prompt_toolkit = "*"
-pyobjc = { version = "*", sys_platform = "== 'darwin'" }
+pyobjc-framework-cocoa = { version = "*", markers = "sys_platform == 'darwin'" }
 amazoncaptcha = "*"
 coloredlogs = "*"
 apprise = "*"
 price-parser = "*"
 pypresence = "*"
-pywin32 = { version = "*", sys_platform = "== 'win32'" }
 psutil = "*"
 stdiomask = "*"
 packaging = "*"
