@@ -17,8 +17,27 @@
 #      The author may be contacted through the project's GitHub, at:
 #      https://github.com/Hari-Nagarajan/fairgame
 import os
+import sys
 import hashlib
+import atexit
 from common.license_hash import license_hash
+
+# True when running as a packaged executable (see fairgame.spec)
+FROZEN = getattr(sys, "frozen", False)
+
+if FROZEN:
+    # A double-clicked executable starts in an arbitrary directory, but LICENSE, config/,
+    # logs/ etc. all live next to it
+    os.chdir(os.path.dirname(sys.executable))
+
+    # Keep the console window open so messages (and errors) can be read before it closes
+    def pause_before_closing():
+        try:
+            input("\nPress Enter to close this window...")
+        except (EOFError, KeyboardInterrupt):
+            pass
+
+    atexit.register(pause_before_closing)
 
 
 def sha256sum(filename):
@@ -45,7 +64,7 @@ if os.path.exists("LICENSE") and sha256sum("LICENSE") in license_hash:
     print(s)
 else:
     print("License File Changed or Missing. Quitting Program.")
-    exit(0)
+    sys.exit(0)
 
 
 def notfound_message(exception):
@@ -60,11 +79,32 @@ try:
     from cli import cli
 except ModuleNotFoundError as e:
     notfound_message(e)
-    exit(0)
+    sys.exit(0)
+
+
+def launch_interactive():
+    """What happens when someone double-clicks the executable instead of using the command line"""
+    import click
+    from cli.setup_wizard import AUTOBUY_CONFIG_PATH, run_setup_wizard
+
+    if not os.path.exists(AUTOBUY_CONFIG_PATH):
+        run_setup_wizard()
+    elif click.confirm("\nChange which items FairGame is watching?", default=False):
+        run_setup_wizard()
+
+    test = click.confirm(
+        "\nDo a TEST run? (goes all the way to checkout but does NOT buy anything)",
+        default=True,
+    )
+    cli.main(args=["amazon"] + (["--test"] if test else []))
+
 
 if __name__ == "__main__":
     try:
-        cli.main()
+        if FROZEN and len(sys.argv) == 1:
+            launch_interactive()
+        else:
+            cli.main()
     except ModuleNotFoundError as e:
         notfound_message(e)
-        exit(0)
+        sys.exit(0)

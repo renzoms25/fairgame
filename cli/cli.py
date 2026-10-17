@@ -18,6 +18,7 @@
 #      https://github.com/Hari-Nagarajan/fairgame
 
 import os
+import sys
 import platform
 import shutil
 import time
@@ -29,6 +30,7 @@ from signal import SIGINT, signal
 
 import click
 
+from cli.setup_wizard import run_setup_wizard
 from common.globalconfig import AMAZON_CREDENTIAL_FILE, GlobalConfig
 from notifications.notifications import NotificationHandler, TIME_FORMAT
 from stores.amazon import Amazon
@@ -56,7 +58,7 @@ def sizeof_fmt(num, suffix="B"):
 # see https://docs.python.org/3/library/signal.html
 def interrupt_handler(signal_num, frame):
     log.info(f"Caught the interrupt signal.  Exiting.")
-    exit(0)
+    sys.exit(0)
 
 
 def notify_on_crash(func):
@@ -293,13 +295,19 @@ def test_notifications(disable_sound):
 
 
 @click.command()
+def setup():
+    """Choose which items to buy and at what price"""
+    run_setup_wizard()
+
+
+@click.command()
 @click.option("--w", is_flag=True)
 @click.option("--c", is_flag=True)
 def show(w, c):
     show_file = "show_c.txt"
     if w and c:
         print("Choose one option. Program Quitting")
-        exit(0)
+        sys.exit(0)
     elif w:
         show_file = "show_w.txt"
     elif c:
@@ -308,7 +316,7 @@ def show(w, c):
         print(
             "Option missing, you must include w or c with show argument. Program Quitting"
         )
-        exit(0)
+        sys.exit(0)
 
     if os.path.exists(LICENSE_PATH):
 
@@ -317,10 +325,10 @@ def show(w, c):
                 print(file.read())
             except FileNotFoundError:
                 log.error("License File Missing. Quitting Program")
-                exit(0)
+                sys.exit(0)
     else:
         log.error("License File Missing. Quitting Program.")
-        exit(0)
+        sys.exit(0)
 
 
 @click.command()
@@ -333,7 +341,7 @@ def find_endpoints(domain):
 
     if not domain:
         log.error("You must specify a domain to resolve for endpoints with --domain.")
-        exit(0)
+        sys.exit(0)
     log.info(f"Attempting to resolve '{domain}'")
     # Default
     my_resolver = dns.resolver.Resolver()
@@ -343,7 +351,7 @@ def find_endpoints(domain):
             log.info(f"Your computer resolves {domain} to {rdata.address}")
     except Exception as e:
         log.error(f"Failed to use local resolver due to: {e}")
-        exit(1)
+        sys.exit(1)
 
     # Find endpoints from various DNS servers
     endpoints, resolutions = resolve_domain(domain)
@@ -395,7 +403,7 @@ def resolve_domain(domain):
 def show_traceroutes(domain):
     if not domain:
         log.error("You must specify a domain to test routes using --domain.")
-        exit(0)
+        sys.exit(0)
 
     # Get the endpoints to test
     endpoints, resolutions = resolve_domain(domain=domain)
@@ -415,6 +423,7 @@ signal(SIGINT, interrupt_handler)
 
 main.add_command(amazon)
 main.add_command(test_notifications)
+main.add_command(setup)
 main.add_command(show)
 main.add_command(find_endpoints)
 main.add_command(show_traceroutes)

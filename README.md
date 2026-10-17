@@ -2,6 +2,18 @@
 
 **Note: Development is no longer active on this project. Pull requests submitted by the community will still be reviewed and approved, if valid and functional.**
 
+# Easy Download (no Python needed)
+
+1. Go to the [Releases page](https://github.com/renzoms25/fairgame/releases/latest) and download the zip for your
+   computer: `FairGame-windows.zip`, `FairGame-mac.zip` (Apple Silicon) or `FairGame-linux.zip`.
+2. Unzip it, open `READ ME FIRST.txt`, then double-click `FairGame`.
+
+FairGame asks which product(s) to watch and your price range, then does a test run that does not buy anything.
+Google Chrome must be installed. Everything below is for running from source.
+
+To publish a new set of downloads, push a version tag (e.g. `git tag v0.7.1 && git push origin v0.7.1`). GitHub
+Actions builds all three and attaches them to a release.
+
 # Table of Contents:
 * [About FairGame](#About-FairGame)
     * [Current Functionality](#Current-Functionality)

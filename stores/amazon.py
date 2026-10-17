@@ -18,6 +18,7 @@
 #      https://github.com/Hari-Nagarajan/fairgame
 
 import fileinput
+import sys
 import json
 import math
 import os
@@ -195,7 +196,7 @@ class Amazon:
                             log.error(
                                 f"    {float(config[f'reserve_min_{x + 1}']):.2f} > {float(config[f'reserve_max_{x + 1}']):.2f}"
                             )
-                            exit(0)
+                            sys.exit(0)
 
                         self.asin_list.append(config[f"asin_list_{x + 1}"])
                         self.reserve_min.append(float(config[f"reserve_min_{x + 1}"]))
@@ -206,15 +207,15 @@ class Amazon:
                     log.error(
                         "amazon_config.json file not formatted properly: https://github.com/Hari-Nagarajan/fairgame/wiki/Usage#json-configuration"
                     )
-                    exit(0)
+                    sys.exit(0)
         else:
             log.error(
                 "No config file found, see here on how to fix this: https://github.com/Hari-Nagarajan/fairgame/wiki/Usage#json-configuration"
             )
-            exit(0)
+            sys.exit(0)
 
         if not self.create_driver(self.profile_path):
-            exit(1)
+            sys.exit(1)
 
         for key in AMAZON_URLS.keys():
             AMAZON_URLS[key] = AMAZON_URLS[key].format(domain=self.amazon_website)
@@ -407,7 +408,7 @@ class Amazon:
         if self.driver.find_elements(By.XPATH, '//*[@id="auth-error-message-box"]'):
             log.error("Login failed, delete your credentials file")
             time.sleep(240)
-            exit(1)
+            sys.exit(1)
 
         time.sleep(self.page_wait_delay())
 

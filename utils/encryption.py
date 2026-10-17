@@ -19,6 +19,7 @@
 
 import getpass as getpass
 import stdiomask
+import sys
 import json
 import math
 import os
@@ -61,7 +62,7 @@ def decrypt(ct, password):
         return ptData
     except (KeyError, ValueError):
         print("Incorrect Password.")
-        exit(0)
+        sys.exit(0)
 
 
 def create_encrypted_config(data, file_path):
@@ -80,7 +81,7 @@ def create_encrypted_config(data, file_path):
         log.info("Credentials safely stored.")
     else:
         print("Password and verify password do not match.")
-        exit(0)
+        sys.exit(0)
 
 
 def load_encrypted_config(config_path, encrypted_pass=None):
@@ -110,7 +111,7 @@ def load_encrypted_config(config_path, encrypted_pass=None):
         log.error(
             f"Failed to decrypt the credential file. If you have forgotten the password, delete {config_path} and rerun the bot"
         )
-        exit(1)
+        sys.exit(1)
 
 
 def get_scrypt_cost_factor(mem_percentage=0.5):
@@ -139,7 +140,7 @@ def get_scrypt_cost_factor(mem_percentage=0.5):
 #            ctFile.close()
 #        else:
 #            print("Passwords do no match")
-#            exit(0)
+#            sys.exit(0)
 #
 #    ctFile = open("../amazon_config.enc", "r")
 #    data = ctFile.read()
