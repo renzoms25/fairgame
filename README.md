@@ -6,10 +6,11 @@
 
 1. Go to the [Releases page](https://github.com/renzoms25/fairgame/releases/latest) and download the zip for your
    computer: `FairGame-windows.zip`, `FairGame-mac.zip` (Apple Silicon) or `FairGame-linux.zip`.
-2. Unzip it, open `READ ME FIRST.txt`, then double-click `FairGame`.
+2. Unzip it, open `READ ME FIRST.txt`, then open the FairGame app.
 
-FairGame asks which product(s) to watch and your price range, then does a test run that does not buy anything.
-Google Chrome must be installed. Everything below is for running from source.
+The app has tabs for the items to watch, your Amazon login, options, and live activity, plus a Start button with a
+test mode that does not buy anything. Google Chrome must be installed. Everything below is for running from source;
+`pipenv run python app.py gui` opens the same window from source.
 
 To publish a new set of downloads, push a version tag (e.g. `git tag v0.7.1 && git push origin v0.7.1`). GitHub
 Actions builds all three and attaches them to a release.

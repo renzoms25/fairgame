@@ -19,25 +19,22 @@
 import os
 import sys
 import hashlib
-import atexit
 from common.license_hash import license_hash
 
 # True when running as a packaged executable (see fairgame.spec)
 FROZEN = getattr(sys, "frozen", False)
+# Double-clicking the packaged app (or `python app.py gui`) opens the window; anything else is the CLI
+GUI = (FROZEN and len(sys.argv) == 1) or sys.argv[1:] == ["gui"]
 
 if FROZEN:
-    # A double-clicked executable starts in an arbitrary directory, but LICENSE, config/,
-    # logs/ etc. all live next to it
-    os.chdir(os.path.dirname(sys.executable))
+    from common.paths import prepare_data_dir
 
-    # Keep the console window open so messages (and errors) can be read before it closes
-    def pause_before_closing():
-        try:
-            input("\nPress Enter to close this window...")
-        except (EOFError, KeyboardInterrupt):
-            pass
+    prepare_data_dir()
 
-    atexit.register(pause_before_closing)
+# The GUI reads the bot's output through a pipe, which would otherwise use the locale encoding
+for stream in (sys.stdout, sys.stderr):
+    if stream is not None and hasattr(stream, "reconfigure"):
+        stream.reconfigure(encoding="utf-8", errors="replace")
 
 
 def sha256sum(filename):
@@ -75,40 +72,15 @@ def notfound_message(exception):
     print("Exiting...")
 
 
-try:
-    from cli import cli
-except ModuleNotFoundError as e:
-    notfound_message(e)
-    sys.exit(0)
-
-
-def launch_interactive():
-    """What happens when someone double-clicks the executable instead of using the command line"""
-    import click
-    from cli.setup_wizard import AUTOBUY_CONFIG_PATH, run_setup_wizard
-
-    if not os.path.exists(AUTOBUY_CONFIG_PATH):
-        run_setup_wizard()
-    elif click.confirm("\nChange which items FairGame is watching?", default=False):
-        run_setup_wizard()
-
-    test = click.confirm(
-        "\nDo a TEST run? (goes all the way to checkout but does NOT buy anything)",
-        default=True,
-    )
-    cli.main(args=["amazon"] + (["--test"] if test else []))
-
-
 if __name__ == "__main__":
     try:
-        if FROZEN and len(sys.argv) == 1:
-            import click
+        if GUI:
+            from gui.app import run_gui
 
-            try:
-                launch_interactive()
-            except (EOFError, KeyboardInterrupt, click.exceptions.Abort):
-                print("\nCancelled.")
+            run_gui()
         else:
+            from cli import cli
+
             cli.main()
     except ModuleNotFoundError as e:
         notfound_message(e)

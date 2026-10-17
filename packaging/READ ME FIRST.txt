@@ -11,50 +11,53 @@ BEFORE YOU START
    method are set. FairGame uses your defaults and cannot choose them for you.
 3. Empty your Amazon cart. FairGame won't start if there's anything in it.
 
-STARTING FAIRGAME
------------------
+OPENING FAIRGAME
+----------------
 Windows:
-  Double-click FairGame.exe.
+  Open the FairGame folder and double-click FairGame.exe.
+  (Leave the other files where they are; FairGame needs them.)
   If Windows shows "Windows protected your PC", click "More info", then
   "Run anyway". This happens because the app isn't from a registered company.
 
 Mac (Apple Silicon only, M1 or newer):
-  Double-click FairGame. The first time, macOS will say it can't verify the
-  app. Click "Done", then open System Settings > Privacy & Security, scroll
-  down and click "Open Anyway" next to FairGame, then double-click it again.
+  Drag FairGame into your Applications folder if you like, then double-click
+  it. The first time, macOS says it can't verify the app. Click "Done", open
+  System Settings > Privacy & Security, scroll down, click "Open Anyway" next
+  to FairGame, then open it again.
 
 Linux:
-  Open a terminal in this folder and run:  ./FairGame
+  Open the FairGame folder and run FairGame.
 
-FIRST RUN
----------
-FairGame asks you a few questions in its window:
-  - Which Amazon site you use (just press Enter for amazon.com).
-  - The product you want. Copy the link from your browser's address bar
-    while looking at the product on Amazon, and paste it in.
-  - The lowest and highest price you're willing to pay.
-  - Whether to do a TEST run. Say yes the first time! A test run goes all
-    the way to the checkout page but does NOT buy anything.
+USING FAIRGAME
+--------------
+1. Items tab: paste the Amazon link of the product you want (copy it from
+   your browser's address bar) and type the lowest and highest price you're
+   willing to pay. Click "Add another item" to buy more than one thing.
+2. Account tab: enter your Amazon email and password, and make up a
+   FairGame password. The FairGame password locks your Amazon login on this
+   computer; you'll type it every time you start.
+3. Leave "Test mode" switched ON the first time and click Start.
 
-It then asks for your Amazon email and password, and for a NEW password
-that protects your Amazon login on this computer. Remember that new
-password: FairGame asks for it every time it starts.
+A Chrome window opens and FairGame works in it. Leave that window alone.
+Watch the Activity tab and the status at the bottom. In test mode it goes
+all the way to the checkout page but does NOT buy anything. When it says
+"Test complete", it's working.
 
-A Chrome window opens and FairGame works in it. Leave that window alone
-while FairGame runs. To stop FairGame, close its black text window.
+To buy for real, switch Test mode off and click Start. Click Stop at any
+time.
 
 IMPORTANT
 ---------
 - Amazon may restrict accounts that use bots. Don't run FairGame on more
-  than one computer at a time with the same Amazon account.
+  than one computer at a time with the same Amazon account, and don't set
+  the time between checks too low (Options tab).
 - If Chrome offers to save your password, click "Never".
-- Only turn off test mode when you're ready for FairGame to really buy.
+- If Amazon asks for a code or a puzzle, answer it in the Chrome window.
 
 TROUBLESHOOTING
 ---------------
-- Forgot the FairGame password: delete config/amazon_credentials.json
-  and start FairGame again.
-- To change the items you're watching: start FairGame and answer "y" when it
-  asks whether to change them.
-- Errors are saved in the "logs" folder. The "screenshots" folder shows what
-  Chrome saw at each step.
+- Forgot your FairGame password: on the Account tab click "Use a different
+  Amazon account" and sign in again.
+- Something went wrong: the Activity tab has buttons to open screenshots of
+  each step and the log files.
+- Options > "Reset Chrome profile" fixes most Chrome start-up problems.

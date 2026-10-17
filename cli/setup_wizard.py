@@ -24,7 +24,7 @@ import re
 
 import click
 
-AUTOBUY_CONFIG_PATH = "config/amazon_config.json"
+from common.paths import AMAZON_CONFIG_PATH as AUTOBUY_CONFIG_PATH
 
 ASIN_PATTERN = re.compile(r"^[A-Z0-9]{10}$")
 # Product links look like https://www.amazon.com/Some-Name/dp/B08HR7SV3M/ref=...

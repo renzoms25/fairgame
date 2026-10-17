@@ -24,8 +24,9 @@ import stdiomask
 from utils.encryption import load_encrypted_config, create_encrypted_config
 from utils.logger import log
 
+from common.paths import AMAZON_CREDENTIAL_FILE
+
 GLOBAL_CONFIG_FILE = "config/fairgame.conf"
-AMAZON_CREDENTIAL_FILE = "config/amazon_credentials.json"
 
 
 def await_credential_input():

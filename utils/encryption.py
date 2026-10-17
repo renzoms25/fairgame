@@ -27,9 +27,13 @@ from base64 import b64encode, b64decode
 from Crypto.Cipher import ChaCha20_Poly1305
 from Crypto.Random import get_random_bytes
 from Crypto.Protocol.KDF import scrypt
+import logging
+
 from psutil import virtual_memory
 
-from utils.logger import log
+# Configured by utils.logger in the bot; importing that here would also roll the log file
+# whenever the GUI reads credentials
+log = logging.getLogger("fairgame")
 
 
 def encrypt(pt, password):
@@ -47,37 +51,53 @@ def encrypt(pt, password):
     return result
 
 
-def decrypt(ct, password):
-    """Decryption function to unwrap and return the decrypted creds back to the main thread."""
+def decrypt_or_raise(ct, password):
+    """Like decrypt(), but raises ValueError for a wrong password instead of exiting"""
     try:
         b64Ct = json.loads(ct)
         json_k = ["nonce", "salt", "ct", "tag"]
         json_v = {k: b64decode(b64Ct[k]) for k in json_k}
-        key = scrypt(
-            password, json_v["salt"], key_len=32, N=get_scrypt_cost_factor(), r=8, p=1
-        )
-        cipher = ChaCha20_Poly1305.new(key=key, nonce=json_v["nonce"])
-        ptData = cipher.decrypt_and_verify(json_v["ct"], json_v["tag"])
+    except (KeyError, ValueError) as e:
+        raise ValueError("Credential file is damaged") from e
+    key = scrypt(
+        password, json_v["salt"], key_len=32, N=get_scrypt_cost_factor(), r=8, p=1
+    )
+    cipher = ChaCha20_Poly1305.new(key=key, nonce=json_v["nonce"])
+    # Raises ValueError when the password is wrong
+    return cipher.decrypt_and_verify(json_v["ct"], json_v["tag"])
 
-        return ptData
-    except (KeyError, ValueError):
+
+def decrypt(ct, password):
+    """Decryption function to unwrap and return the decrypted creds back to the main thread."""
+    try:
+        return decrypt_or_raise(ct, password)
+    except ValueError:
         print("Incorrect Password.")
         sys.exit(0)
+
+
+def write_encrypted_config(data, file_path, password):
+    if isinstance(data, dict):
+        data = json.dumps(data)
+    result = encrypt(bytes(data, "utf-8"), password)
+    with open(file_path, "w") as f:
+        f.write(result)
+
+
+def read_encrypted_config(file_path, password):
+    """Returns the decrypted contents, raising ValueError for a wrong password"""
+    with open(file_path, "r") as f:
+        return json.loads(decrypt_or_raise(f.read(), password))
 
 
 def create_encrypted_config(data, file_path):
     """Creates an encrypted credential file if none exists.  Stores results in a
     file in the root directory."""
-    if isinstance(data, dict):
-        data = json.dumps(data)
-    payload = bytes(data, "utf-8")
     log.info("Create a password for the credential file")
     cpass = stdiomask.getpass(prompt="Credential file password: ", mask="*")
     vpass = stdiomask.getpass(prompt="Verify credential file password: ", mask="*")
     if cpass == vpass:
-        result = encrypt(payload, cpass)
-        with open(file_path, "w") as f:
-            f.write(result)
+        write_encrypted_config(data, file_path, cpass)
         log.info("Credentials safely stored.")
     else:
         print("Password and verify password do not match.")
