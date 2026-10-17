@@ -16,7 +16,6 @@ pycryptodome = "*"
 questionary = "*"
 playsound = "==1.2.2"
 prompt_toolkit = "*"
-pyobjc-framework-cocoa = { version = "*", markers = "sys_platform == 'darwin'" }
 amazoncaptcha = "*"
 coloredlogs = "*"
 apprise = "*"

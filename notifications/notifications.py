@@ -18,6 +18,8 @@
 #      https://github.com/Hari-Nagarajan/fairgame
 
 import queue
+import subprocess
+import sys
 import threading
 from os import path
 from playsound import playsound
@@ -85,8 +87,13 @@ class NotificationHandler:
     def play(self, audio_file=None, **kwargs):
         if self.sound_enabled:
             try:
-                # See https://github.com/TaylorSMarks/playsound
-                playsound(audio_file if audio_file else NOTIFICATION_SOUND_PATH, False)
+                audio_file = audio_file if audio_file else NOTIFICATION_SOUND_PATH
+                if sys.platform == "darwin":
+                    # playsound needs pyobjc on macOS; afplay ships with the OS
+                    subprocess.Popen(["afplay", audio_file])
+                else:
+                    # See https://github.com/TaylorSMarks/playsound
+                    playsound(audio_file, False)
             except Exception as e:
                 log.error(e)
                 log.warning(
