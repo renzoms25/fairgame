@@ -56,7 +56,7 @@ class NotificationHandler:
             log.info(f"No Apprise config found at {APPRISE_CONFIG_PATH}.")
             log.info(f"For notifications, see {APPRISE_CONFIG_PATH}_template")
 
-    def send_notification(self, message, ss_name=[], **kwargs):
+    def send_notification(self, message, ss_name=None, **kwargs):
         if self.enabled:
             self.queue.put((message, ss_name))
 
@@ -89,7 +89,7 @@ class NotificationHandler:
                 playsound(audio_file if audio_file else NOTIFICATION_SOUND_PATH, False)
             except Exception as e:
                 log.error(e)
-                log.warn(
+                log.warning(
                     "Error playing notification sound. Disabling local audio notifications."
                 )
                 self.sound_enabled = False

@@ -160,7 +160,8 @@ def main():
     "--p",
     type=str,
     default=None,
-    help="Pass in encryption file password as argument",
+    envvar="FAIRGAME_PASSWORD",
+    help="Pass in encryption file password as argument (or set FAIRGAME_PASSWORD)",
 )
 @click.option(
     "--log-stock-check",
@@ -325,7 +326,7 @@ def show(w, c):
 @click.command()
 @click.option(
     "--domain",
-    help="Specify the domain you want to find endpoints for (e.g. www.amazon.de, www.amazon.com, smile.amazon.com.",
+    help="Specify the domain you want to find endpoints for (e.g. www.amazon.de, www.amazon.com, www.amazon.com.",
 )
 def find_endpoints(domain):
     import dns.resolver

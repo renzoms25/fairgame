@@ -110,6 +110,7 @@ def load_encrypted_config(config_path, encrypted_pass=None):
         log.error(
             f"Failed to decrypt the credential file. If you have forgotten the password, delete {config_path} and rerun the bot"
         )
+        exit(1)
 
 
 def get_scrypt_cost_factor(mem_percentage=0.5):

@@ -17,10 +17,10 @@
 #      The author may be contacted through the project's GitHub, at:
 #      https://github.com/Hari-Nagarajan/fairgame
 
+import functools
+
 import requests
 from packaging.version import Version, parse, InvalidVersion
-import sys
-import os
 
 _LATEST_URL = "https://api.github.com/repos/Hari-Nagarajan/fairgame/releases/latest"
 
@@ -44,22 +44,15 @@ def is_latest():
         return True
 
 
+@functools.lru_cache(maxsize=None)
 def get_latest_version():
+    # Never let the update check block or crash startup; fall back to a safe, but wrong version
     try:
-        r = requests.get(_LATEST_URL)
+        r = requests.get(_LATEST_URL, timeout=5)
         if r.status_code == 403:
-            print("GitHub API rate limit reached")
-            print("Consider running fewer instances of the bot")
-            if sys.platform == "win32":
-                os.system("pause")
-            else:
-                input("Press enter key to continue...")
-            # Return a safe, but wrong version
-            latest_version = parse("0.0")
-            return latest_version
-        data = r.json()
-        latest_version = parse(str(data["tag_name"]))
-    except InvalidVersion:
-        # Return a safe, but wrong version
-        latest_version = parse("0.0")
-    return latest_version
+            print("GitHub API rate limit reached, skipping update check")
+            return parse("0.0")
+        r.raise_for_status()
+        return parse(str(r.json()["tag_name"]))
+    except (requests.RequestException, KeyError, ValueError, InvalidVersion):
+        return parse("0.0")

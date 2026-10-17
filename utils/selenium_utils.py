@@ -125,7 +125,7 @@ def field_send_keys(d, field, keys):
     """
     Uses webdriver(d) to fiend a field(field), clears it and sends keys(keys)
     """
-    elem = d.find_element(By.NAME,field)
+    elem = d.find_element(By.NAME, field)
     elem.clear()
     elem.send_keys(keys)
 
@@ -152,8 +152,8 @@ def add_cookies_to_session_from_driver(driver, session):
 
 
 def enable_headless():
-    options.add_argument("--headless")
-    options.add_argument("--window-size=1920x1080")
+    options.add_argument("--headless=new")
+    options.add_argument("--window-size=1920,1080")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")

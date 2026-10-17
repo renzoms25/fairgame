@@ -121,10 +121,7 @@ dependencies in other operating systems:
    **Ignore extra files in this folder. Screenshot is based on development files. Just follow instructions as written!**
    ![Copy template](https://github.com/Hari-Nagarajan/fairgame/blob/master/docs/images/Step5b.png)
    
-6. Edit the amazon_config.json, this assumes US using smile.amazon.com. Using Amazon Smile requires that you select
-   a charity. If you do not know how to do this, use 
-   [Google](https://www.google.com/search?q=how+do+i+select+a+charity+on+amazon+smile). 
-   Find a product, like a USB stick that is in stock, and put the 
+6. Edit the amazon_config.json, this assumes US using www.amazon.com. Find a product, like a USB stick that is in stock, and put the 
    [ASIN](https://www.google.com/search?q=what+is+an+ASIN) for that product in place of the B07JH53M4T listed below 
    (or use that if it is in stock). Change the reserve_min_1 and reserve_max_1 to be below and above the price of the
    item, respectively: 
@@ -134,7 +131,7 @@ dependencies in other operating systems:
   "asin_list_1": ["B07JH53M4T"],
   "reserve_min_1": 5,
   "reserve_max_1": 15,
-  "amazon_website": "smile.amazon.com"
+  "amazon_website": "www.amazon.com"
 }
 ```
    
@@ -238,9 +235,8 @@ Discord [#asins](https://discord.gg/DuVXAN5FnN). If it's not in there, you have 
   item a 1 dollar, it's likely fake.
 * `reserve_max_x` is the most amount you want to spend for a single item (i.e., ASIN) in `asin_list_x`. Does not include
   tax. If `--checkshipping` flag is active, this includes shipping listed on offer page.
-* `amazon_website` amazon domain you want to use. smile subdomain appears to work better, if available in your
-  country. [*What is Smile?*](https://org.amazon.com/) Note that using Amazon Smile requires you to pick a charity.
-  If you do not do so, you will not be able to purchase anything, and you will likely have problems running FairGame.
+* `amazon_website` amazon domain you want to use (e.g. `www.amazon.com`, `www.amazon.de`). AmazonSmile was shut down
+  in February 2023; any `smile.` domain is automatically rewritten to `www.`.
 
 ##### Configuration Examples
 
@@ -254,7 +250,7 @@ One unique product with one ASIN (e.g., Segway Ninebot S and GoKart Drift Kit Bu
   ],
   "reserve_min_1": 450,
   "reserve_max_1": 500,
-  "amazon_website": "smile.amazon.com"
+  "amazon_website": "www.amazon.com"
 }
 ```
 
@@ -270,7 +266,7 @@ One general product with multiple ASINS (e.g 16 GB USB drive 2 pack)
   ],
   "reserve_min_1": 15,
   "reserve_max_1": 20,
-  "amazon_website": "smile.amazon.com"
+  "amazon_website": "www.amazon.com"
 }
 ```
 
@@ -293,7 +289,7 @@ Thinker)
   ],
   "reserve_min_2": 50,
   "reserve_max_2": 75,
-  "amazon_website": "smile.amazon.com"
+  "amazon_website": "www.amazon.com"
 }
 ```
 If you wanted to watch another product, you'd add a third list (e.g. `asin_list_3`) and associated min/max pricing and
@@ -603,7 +599,7 @@ Usage: app.py find-endpoints [OPTIONS]
 
 Options:
   --domain TEXT  Specify the domain you want to find endpoints for (e.g.
-                 www.amazon.de, www.amazon.com, smile.amazon.com.
+                 www.amazon.de, www.amazon.com.
 
   --help         Show this message and exit.
 ```
